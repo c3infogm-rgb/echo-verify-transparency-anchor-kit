@@ -1,14 +1,17 @@
 """Acceptance tests for the transparency anchor verifier (Stage (1)A v0.1).
 
 These cover the four conditions in the work order:
-  1. normal    -- after anchoring, verify returns PASS
+  1. normal    -- after anchoring, with both crypto tools available, PASS
   2. tampered  -- flip one byte of the target -> FAIL
   3. missing   -- remove a side-car -> HOLD (one system left) or FAIL (none)
   4. hash tie  -- anchor_record.target_sha256 equals the real file sha256
 
-The tests are hermetic: cosign/openssl crypto re-verification is stubbed out so
-the deterministic *linkage* logic is what is exercised (matching how the tool
-behaves offline). Full crypto verification is Jun's job at anchor time.
+The tests are hermetic: ``verify_anchor._cosign_verify_blob`` and
+``verify_anchor._openssl_ts_verify`` are stubbed per-test to return True
+(crypto success), False (crypto failure), or None (tool unavailable /
+inconclusive) so both the deterministic offline *linkage* logic and the
+full-verification gating can be exercised without invoking real cosign or
+openssl subprocesses.
 """
 import base64
 import hashlib
@@ -118,12 +121,83 @@ class TestAnchorVerify(unittest.TestCase):
         verify_anchor._cosign_verify_blob, verify_anchor._openssl_ts_verify = self._saved
         self._tmp.cleanup()
 
-    # 1. normal system: anchored -> PASS
+    # 1. normal system: anchored, both crypto tools succeed -> PASS
     def test_normal_pass(self):
+        verify_anchor._cosign_verify_blob = lambda *a, **k: True
+        verify_anchor._openssl_ts_verify = lambda *a, **k: True
         fx = AnchorFixture(self.root)
         result = verify_anchor.evaluate(fx.record_path)
         self.assertEqual(result["verdict"], verify_anchor.PASS, result)
         self.assertEqual(result["records"]["sigstore_rekor"]["log_index"], 42)
+        self.assertEqual(result["records"]["sigstore_rekor"]["crypto"],
+                         "cosign-verified")
+        self.assertEqual(result["records"]["rfc3161"]["crypto"],
+                         "openssl-verified")
+
+    # linkage matches but neither crypto tool ran -> HOLD, never PASS
+    def test_linkage_only_does_not_satisfy_full_pass(self):
+        # setUp already stubs both crypto functions to return None.
+        fx = AnchorFixture(self.root)
+        result = verify_anchor.evaluate(fx.record_path)
+        self.assertEqual(result["verdict"], verify_anchor.HOLD, result)
+        self.assertNotEqual(result["verdict"], verify_anchor.PASS)
+        self.assertEqual(result["records"]["sigstore_rekor"]["state"],
+                         verify_anchor.REC_HOLD)
+        self.assertEqual(result["records"]["sigstore_rekor"]["crypto"],
+                         "linkage-only")
+        self.assertEqual(result["records"]["rfc3161"]["state"],
+                         verify_anchor.REC_HOLD)
+        self.assertEqual(result["records"]["rfc3161"]["crypto"],
+                         "linkage-only")
+        self.assertIn(verify_anchor.RC_COSIGN_MISSING, result["reasons"])
+        self.assertIn(verify_anchor.RC_OPENSSL_MISSING, result["reasons"])
+
+    # legacy hashedrekord path: cosign missing -> HOLD, not PASS via linkage
+    def test_legacy_cosign_missing_holds_rekor(self):
+        verify_anchor._openssl_ts_verify = lambda *a, **k: True
+        fx = AnchorFixture(self.root)
+        result = verify_anchor.evaluate(fx.record_path)
+        rekor = result["records"]["sigstore_rekor"]
+        self.assertEqual(rekor["state"], verify_anchor.REC_HOLD)
+        self.assertEqual(rekor["reason"], verify_anchor.RC_COSIGN_MISSING)
+        self.assertEqual(rekor["crypto"], "linkage-only")
+        self.assertNotEqual(result["verdict"], verify_anchor.PASS)
+        self.assertEqual(result["verdict"], verify_anchor.HOLD, result)
+
+    # legacy hashedrekord path: cosign explicitly fails -> FAIL
+    def test_legacy_cosign_verify_failed_fails_rekor(self):
+        verify_anchor._cosign_verify_blob = lambda *a, **k: False
+        verify_anchor._openssl_ts_verify = lambda *a, **k: True
+        fx = AnchorFixture(self.root)
+        result = verify_anchor.evaluate(fx.record_path)
+        rekor = result["records"]["sigstore_rekor"]
+        self.assertEqual(rekor["state"], verify_anchor.REC_FAIL)
+        self.assertEqual(rekor["reason"], verify_anchor.RC_REKOR_VERIFY_FAILED)
+        self.assertEqual(result["verdict"], verify_anchor.FAIL, result)
+
+    # openssl missing -> HOLD with RC_OPENSSL_MISSING, overall not PASS
+    def test_openssl_missing_holds_rfc3161(self):
+        verify_anchor._cosign_verify_blob = lambda *a, **k: True
+        fx = AnchorFixture(self.root)
+        result = verify_anchor.evaluate(fx.record_path)
+        rfc = result["records"]["rfc3161"]
+        self.assertEqual(rfc["state"], verify_anchor.REC_HOLD)
+        self.assertEqual(rfc["reason"], verify_anchor.RC_OPENSSL_MISSING)
+        self.assertEqual(rfc["crypto"], "linkage-only")
+        self.assertIn(verify_anchor.RC_OPENSSL_MISSING, result["reasons"])
+        self.assertNotEqual(result["verdict"], verify_anchor.PASS)
+        self.assertEqual(result["verdict"], verify_anchor.HOLD, result)
+
+    # openssl explicitly fails verification -> FAIL
+    def test_openssl_verify_failed_fails_rfc3161(self):
+        verify_anchor._cosign_verify_blob = lambda *a, **k: True
+        verify_anchor._openssl_ts_verify = lambda *a, **k: False
+        fx = AnchorFixture(self.root)
+        result = verify_anchor.evaluate(fx.record_path)
+        rfc = result["records"]["rfc3161"]
+        self.assertEqual(rfc["state"], verify_anchor.REC_FAIL)
+        self.assertEqual(rfc["reason"], verify_anchor.RC_RFC3161_VERIFY_FAILED)
+        self.assertEqual(result["verdict"], verify_anchor.FAIL, result)
 
     # 4. the recorded hash equals the real file hash
     def test_target_sha256_matches_file(self):
@@ -152,6 +226,7 @@ class TestAnchorVerify(unittest.TestCase):
 
     def test_v03_bundle_cosign_success_passes_rekor(self):
         verify_anchor._cosign_verify_blob = lambda *a, **k: True
+        verify_anchor._openssl_ts_verify = lambda *a, **k: True
         fx = AnchorFixture(self.root, rekor_bundle=_rekor_bundle_v03())
         result = verify_anchor.evaluate(fx.record_path)
         rekor = result["records"]["sigstore_rekor"]
@@ -173,6 +248,7 @@ class TestAnchorVerify(unittest.TestCase):
 
     def test_v03_bundle_missing_cosign_holds_rekor(self):
         verify_anchor._cosign_verify_blob = lambda *a, **k: None
+        verify_anchor._openssl_ts_verify = lambda *a, **k: True
         fx = AnchorFixture(self.root, rekor_bundle=_rekor_bundle_v03())
         result = verify_anchor.evaluate(fx.record_path)
         rekor = result["records"]["sigstore_rekor"]
@@ -230,6 +306,7 @@ class TestAnchorVerify(unittest.TestCase):
 
     # 3. one side-car missing -> HOLD
     def test_one_system_missing_holds(self):
+        verify_anchor._openssl_ts_verify = lambda *a, **k: True
         fx = AnchorFixture(self.root)
         moved = fx.tdir / "rekor_bundle.json.bak"
         shutil.move(str(fx.tdir / verify_anchor.REKOR_BUNDLE_NAME), str(moved))

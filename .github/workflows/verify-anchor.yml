@@ -1,0 +1,39 @@
+name: verify-anchor
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Python test dependencies
+        run: pip install pytest jsonschema
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Confirm openssl and cosign are on PATH
+        run: |
+          openssl version
+          cosign version
+
+      - name: Run focused verifier tests
+        run: python -m pytest tests/test_anchor_verify.py -v
+
+      - name: Verify the externally anchored manifest
+        run: python -m tools.anchor.verify_anchor --record transparency/anchor_record.json
+
+      - name: Run MIL-DP kit verification tests
+        run: python -m unittest tests.test_mil_dp_kit -v

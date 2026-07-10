@@ -20,9 +20,16 @@ time and tamper-evidence for the exact target bytes.
 
 ## ①A And ①B
 
-①A is complete for this export when the manifest hash matches, the
-Sigstore/Rekor bundle verifies, and the RFC3161 timestamp verifies for the
-target manifest.
+①A is complete for this export only when all three hold: the manifest hash
+matches, `cosign verify-blob` succeeds against the Sigstore/Rekor bundle, and
+`openssl ts -verify` succeeds against the RFC3161 timestamp for the target
+manifest. An offline digest-linkage match by itself (the recorded hash simply
+appearing inside a side-car) is diagnostic information only and never
+satisfies ①A on its own.
+
+If `cosign` or `openssl` is not on `PATH`, the affected record reports `HOLD`
+(reason codes `RC_COSIGN_MISSING` / `RC_OPENSSL_MISSING`) and the overall
+verdict cannot be `PASS`; install the missing tool and re-run.
 
 ①B is not complete in this export. ①B remains pending until an external
 verifier clones this kit, runs the checks in their own environment, and returns

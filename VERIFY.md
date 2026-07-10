@@ -19,6 +19,14 @@ where.exe openssl
 If either command is missing, install it through your normal trusted channel and
 restart PowerShell so the updated `PATH` is visible.
 
+Full overall `PASS` requires all three: the target sha256 matches, `cosign
+verify-blob` succeeds, and `openssl ts -verify` succeeds. If `cosign` is
+missing, `sigstore_rekor` reports `HOLD` (`RC_COSIGN_MISSING`). If `openssl`
+is missing, `rfc3161` reports `HOLD` (`RC_OPENSSL_MISSING`). Either way the
+overall verdict cannot be `PASS` until the missing tool is installed and the
+check re-run; an offline digest-linkage match alone is reported only as
+diagnostic information and does not satisfy full ①A verification.
+
 ## Automated Checks
 
 ```powershell

@@ -21,11 +21,19 @@ content is valid, third-party verified, certified, or audited. Those are Stage
 
 Verification depth
 ------------------
-Legacy hashedrekord bundles expose an offline linkage check: the sha256 that
-each record commits to must equal the sha256 of the target file right now. For
-Sigstore bundle v0.3, the verifier requires ``cosign verify-blob`` because the
-bundle no longer exposes the old hashedrekord digest shape. Fail-closed: a
-missing or unverifiable record is never treated as "assumed fine".
+Both side-cars expose an offline *linkage* check: the sha256 (or digest bytes)
+each record commits to must equal the sha256 of the target file right now.
+Linkage alone is diagnostic only -- it proves the record was built for this
+exact content, not that the record's signature is genuine. A full overall
+PASS additionally requires:
+
+  * ``cosign verify-blob`` to succeed against the Rekor/Sigstore bundle, and
+  * ``openssl ts -verify`` to succeed against the RFC 3161 token.
+
+If either tool is unavailable (not on PATH) or inconclusive, the affected
+record is reported HOLD rather than PASS, and the overall verdict cannot be
+PASS. Fail-closed: a missing or unverifiable record is never treated as
+"assumed fine".
 """
 from __future__ import annotations
 
@@ -74,6 +82,8 @@ RC_REKOR_VERIFY_FAILED = "RC_REKOR_VERIFY_FAILED"
 RC_COSIGN_MISSING = "RC_COSIGN_MISSING"
 RC_RFC3161_MISSING = "RC_RFC3161_MISSING"
 RC_RFC3161_HASH_MISMATCH = "RC_RFC3161_HASH_MISMATCH"
+RC_RFC3161_VERIFY_FAILED = "RC_RFC3161_VERIFY_FAILED"
+RC_OPENSSL_MISSING = "RC_OPENSSL_MISSING"
 RC_ONE_SYSTEM_MISSING = "RC_ONE_SYSTEM_MISSING"
 RC_NO_RECORDS = "RC_NO_RECORDS"
 
@@ -230,11 +240,16 @@ def verify_rekor(bundle_path: pathlib.Path, target: pathlib.Path,
 
     crypto = _cosign_verify_blob(bundle_path, target)
     if crypto is False:
-        return {"state": REC_FAIL, "reason": RC_REKOR_MALFORMED,
+        return {"state": REC_FAIL, "reason": RC_REKOR_VERIFY_FAILED,
                 "detail": "cosign verify-blob failed"}
+    if crypto is None:
+        # Digest linkage matched, but no crypto re-verification ran. Linkage
+        # alone does not satisfy full ①A verification (diagnostic only).
+        return {"state": REC_HOLD, "reason": RC_COSIGN_MISSING,
+                "detail": "cosign not found", "crypto": "linkage-only"}
     return {"state": REC_PASS, "reason": None,
             "log_index": rekor_log_index(bundle),
-            "crypto": "cosign-verified" if crypto else "linkage-only"}
+            "crypto": "cosign-verified"}
 
 
 # --------------------------------------------------------------------------- #
@@ -281,10 +296,17 @@ def verify_rfc3161(token_path: pathlib.Path, target: pathlib.Path,
                 "detail": "timestamp token does not bind the file digest"}
     crypto = _openssl_ts_verify(token_path, target, ca_path)
     if crypto is False:
-        return {"state": REC_FAIL, "reason": RC_RFC3161_HASH_MISMATCH,
+        return {"state": REC_FAIL, "reason": RC_RFC3161_VERIFY_FAILED,
                 "detail": "openssl ts -verify failed"}
+    if crypto is None:
+        # Digest linkage matched, but no crypto re-verification ran (openssl
+        # missing from PATH, or the TSA CA file is unavailable). Linkage
+        # alone does not satisfy full ①A verification (diagnostic only).
+        return {"state": REC_HOLD, "reason": RC_OPENSSL_MISSING,
+                "detail": "openssl not available or CA file missing",
+                "crypto": "linkage-only"}
     return {"state": REC_PASS, "reason": None,
-            "crypto": "openssl-verified" if crypto else "linkage-only"}
+            "crypto": "openssl-verified"}
 
 
 # --------------------------------------------------------------------------- #
@@ -384,17 +406,22 @@ def evaluate(record_path: pathlib.Path, base_dir: pathlib.Path | None = None) ->
         return result
 
     if all(state == REC_PASS for state in states):
+        # Full ①A verification: both records crypto-verified, not merely linked.
         result["verdict"] = PASS
-    elif states.count(REC_PASS) == 1:
+    elif all(state == REC_MISSING for state in states):
+        # No side-car evidence at all -> fail-closed.
+        result["verdict"] = FAIL
+        _append_reason(result, RC_NO_RECORDS)
+    else:
+        # At least one record is not a confirmed crypto PASS (HOLD or
+        # MISSING) but nothing actively contradicts the anchor. Linkage-only
+        # results are diagnostic here, never sufficient for PASS.
         result["verdict"] = HOLD
         if REC_MISSING in states:
             _append_reason(result, RC_ONE_SYSTEM_MISSING)
         for rec in (rekor, rfc):
             if rec["state"] != REC_PASS and rec.get("reason"):
                 _append_reason(result, rec["reason"])
-    else:  # both missing -> fail-closed
-        result["verdict"] = FAIL
-        _append_reason(result, RC_NO_RECORDS)
     return result
 
 
