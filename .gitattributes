@@ -1,3 +1,4 @@
+echo_verify_kit/mil_dp/run_manifest.json text eol=lf
 echo_verify_kit/mil_dp/evidence/gate_input/*.json text eol=crlf
 echo_verify_kit/mil_dp/evidence/packets/*.json text eol=crlf
 echo_verify_kit/mil_dp/README.md text eol=crlf
