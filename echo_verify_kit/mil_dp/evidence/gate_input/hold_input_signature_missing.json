@@ -1,0 +1,20 @@
+{
+  "audit": {
+    "decision_hash": "e3ba8b8f4f09e106d52a910bdcd85ef419c4a8ca4941b99e3e7ef3081c2fc7a8",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "ef1c561e6eab95e8bdc777d45b58ff23f99f049ff504ac666188af383624b7b8",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-hold_input_signature_missing",
+  "evidence_refs": [
+    "manifest-req-1"
+  ],
+  "input_signature": {
+    "present": false
+  },
+  "reason_codes": [],
+  "state_after": "held",
+  "state_before": "evaluating",
+  "verdict": "HOLD"
+}

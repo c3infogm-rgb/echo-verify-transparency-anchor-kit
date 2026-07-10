@@ -1,0 +1,19 @@
+{
+  "audit": {
+    "decision_hash": "acee59dbe0a2f80cbba8e6ef096c3397372dc66d11e2de507d8162b0f929612b",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "d9adf4eb094d65df229d072a5d0d1a94d481cb1a8049de8ae0dc0826b870e116",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-hold_escalation_review",
+  "evidence_refs": [
+    "manifest-review-1"
+  ],
+  "reason_codes": [
+    "EAG_APPROVAL_REQUIRED"
+  ],
+  "state_after": "held",
+  "state_before": "evaluating",
+  "verdict": "ESCALATE"
+}

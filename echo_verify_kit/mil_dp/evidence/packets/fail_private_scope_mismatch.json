@@ -1,0 +1,29 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-fail_private_scope_mismatch",
+  "decision": "FAIL",
+  "decision_id": "dec-fail_private_scope_mismatch",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": true,
+    "public": false
+  },
+  "evidence_refs": [
+    "manifest-scope-1"
+  ],
+  "input_hash": "sha256:5c8fecefe4c1f8215f7920260e45f03460b7c64374ba3cea0d83454bd818ae20",
+  "packet_hash": "sha256:42f7950a58e2ef4eeeb55bb2181e399e232a49df8e255c7eafdbd0c01c0686c9",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_POLICY_BOUNDARY",
+    "RC_PRIVATE_RAIL"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "blocked",
+  "state_before": "evaluating"
+}

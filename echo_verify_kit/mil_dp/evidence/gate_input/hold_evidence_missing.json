@@ -1,0 +1,17 @@
+{
+  "audit": {
+    "decision_hash": "e63d87e1b2af635e8ae98a75294953a9aaa3d8c523940830cd04923ad41c46b7",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "78f2465e6280ed52d7a4f3c4b28fb7753f1386cf124f5ca20fd0e5c4e14d0f8f",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-hold_evidence_missing",
+  "evidence_refs": [],
+  "reason_codes": [
+    "EAG_EVIDENCE_MISSING"
+  ],
+  "state_after": "held",
+  "state_before": "evaluating",
+  "verdict": "HOLD"
+}

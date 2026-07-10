@@ -1,0 +1,29 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-hold_escalation_review",
+  "decision": "HOLD",
+  "decision_id": "dec-hold_escalation_review",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": false,
+    "public": false
+  },
+  "evidence_refs": [
+    "manifest-review-1"
+  ],
+  "input_hash": "sha256:d9adf4eb094d65df229d072a5d0d1a94d481cb1a8049de8ae0dc0826b870e116",
+  "packet_hash": "sha256:c01fe9ac3a08d79111f6cd76ed91d0fcb55748964ba7281f3ac1726df898f01b",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_ESCALATION_REQUIRED",
+    "RC_POLICY_BOUNDARY"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "held",
+  "state_before": "evaluating"
+}

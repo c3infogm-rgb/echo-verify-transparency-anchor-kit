@@ -1,0 +1,22 @@
+{
+  "audit": {
+    "decision_hash": "bfc3a5df902137412a2d9aedbc3f3c561dd3fca82f29dfa60010112b067b5aa8",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "07b6253b623e1a03bbe300b4de4f616298406fba14d4f2da5616d194719cfc42",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-pass_typo_fix",
+  "evidence_refs": [
+    "manifest-typo-fix"
+  ],
+  "input_signature": {
+    "present": true
+  },
+  "reason_codes": [
+    "PASS_EVIDENCE_SUFFICIENT"
+  ],
+  "state_after": "released",
+  "state_before": "evaluating",
+  "verdict": "PASS"
+}

@@ -1,0 +1,19 @@
+{
+  "audit": {
+    "decision_hash": "28cfec24645269ceef5e6c9a32d16ca923e18efaaefa9f6cd2c85e95f713f284",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "841c1a122f74030757e0e5577e2bfde7e6d4d26079bb2a6eb305fccb38ed63be",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-fail_external_edge",
+  "evidence_refs": [
+    "manifest-edge-1"
+  ],
+  "reason_codes": [
+    "TG_EXTERNAL_EDGE_RISK"
+  ],
+  "state_after": "blocked",
+  "state_before": "evaluating",
+  "verdict": "FAIL"
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.logos-gate-core.local/mil_dp_verification_result_v0_1.schema.json",
+  "title": "MIL-DP Verification Result v0.1",
+  "description": "Result emitted by the MIL-DP BYOV reference verifier. ECHO-VERIFY-compatible, not complete. The result shows path reproducibility of packet_hash, not correctness of the decision. Independence rule (DD-2): a result counts as INDEPENDENTLY REPLAYED only when signature.present is true AND the signature verifies under a key whose kid is NOT the issuer's. Stage 1 always emits signature.present=false, so a Stage 1 result is, by definition, not independent; there is no self-asserted 'independent' flag.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kit_id",
+    "spec_target",
+    "verifier_id",
+    "run_at",
+    "checks",
+    "verdict",
+    "reason_codes",
+    "signature"
+  ],
+  "properties": {
+    "kit_id": { "type": "string", "minLength": 1 },
+    "spec_target": { "type": "string", "const": "MIL-DP-0.1" },
+    "verifier_id": { "type": "string", "minLength": 1 },
+    "run_at": { "type": "string", "format": "date-time" },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["check_id", "status", "detail"],
+        "properties": {
+          "check_id": { "type": "string", "minLength": 1 },
+          "status": { "type": "string", "enum": ["PASS", "FAIL", "SKIP"] },
+          "detail": { "type": "string" }
+        }
+      }
+    },
+    "verdict": { "type": "string", "enum": ["PASS", "FAIL"] },
+    "reason_codes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "alg", "kid"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "alg": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "kid": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "verdict": { "const": "FAIL" } },
+        "required": ["verdict"]
+      },
+      "then": {
+        "properties": {
+          "reason_codes": { "minItems": 1 }
+        }
+      }
+    }
+  ]
+}

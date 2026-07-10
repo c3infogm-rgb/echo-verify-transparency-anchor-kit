@@ -1,0 +1,122 @@
+{
+  "canonicalization": {
+    "name": "MIL-DP-0.1 deterministic core",
+    "rule": "core fields only; reason_codes and evidence_refs de-duplicated and ascending-sorted; UTF-8 JSON with keys ascending and compact separators; sha256; sha256: prefix",
+    "spec_ref": "docs/spec/mil_decision_packet_profile_v0_1.md (D-2)"
+  },
+  "files": [
+    {
+      "bytes": 603,
+      "path": "evidence/gate_input/fail_external_edge.json",
+      "sha256": "6e72b11302637316b72747b416d3893871c874ecf146240266007366d2541091"
+    },
+    {
+      "bytes": 632,
+      "path": "evidence/gate_input/fail_private_scope_mismatch.json",
+      "sha256": "9c40bca7bf8210e10381751fef6dc418937870fdde3a5b410df63dafbdb391b1"
+    },
+    {
+      "bytes": 610,
+      "path": "evidence/gate_input/hold_escalation_review.json",
+      "sha256": "29885bb3b4d11298d8e2dfb3ad73e7a63cf27f2e6a2ceb5c157a9f5f311177f3"
+    },
+    {
+      "bytes": 575,
+      "path": "evidence/gate_input/hold_evidence_missing.json",
+      "sha256": "1dd0cdc3ac6203df93a813c0460e9ee8a49901f641345d5f319189d3181bce0f"
+    },
+    {
+      "bytes": 628,
+      "path": "evidence/gate_input/hold_input_signature_missing.json",
+      "sha256": "c71223204208ed73c43c4b7110beaf1bbc971f2adec587716697fed706d86627"
+    },
+    {
+      "bytes": 683,
+      "path": "evidence/gate_input/pass_config_update.json",
+      "sha256": "f144bc80498702b2a849b2c4197a63e9b578d37207b1674be91b6c157b655b7f"
+    },
+    {
+      "bytes": 629,
+      "path": "evidence/gate_input/pass_doc_publish.json",
+      "sha256": "0f83165354e24bd0fe632cb2e704f6d13856a9033c4af4fca11486ee98cfcc5f"
+    },
+    {
+      "bytes": 655,
+      "path": "evidence/gate_input/pass_typo_fix.json",
+      "sha256": "b087c48831445ed2a28df6bb9cddf94b47faa8776a291c3a7e70c5b07f1087c9"
+    },
+    {
+      "bytes": 830,
+      "path": "evidence/packets/fail_external_edge.json",
+      "sha256": "4066470fcd5e3e5abf42e4d2759f540e34ad98c2a18a59388a5523e1d594d7ef"
+    },
+    {
+      "bytes": 872,
+      "path": "evidence/packets/fail_private_scope_mismatch.json",
+      "sha256": "1bc08967a91dff95048875c83e921dd0bd8e5aa828286fc8f88effe7771b3ff7"
+    },
+    {
+      "bytes": 868,
+      "path": "evidence/packets/hold_escalation_review.json",
+      "sha256": "864544dccf93ea368afb6007fb85900a880914e12b750cea84b585c7a2027e5d"
+    },
+    {
+      "bytes": 807,
+      "path": "evidence/packets/hold_evidence_missing.json",
+      "sha256": "80824cd32449b366d5f08f59becff2d5837b747e363d73fd8dd404356e1a6bb0"
+    },
+    {
+      "bytes": 848,
+      "path": "evidence/packets/hold_input_signature_missing.json",
+      "sha256": "e5a0323da3168c86aa7e4f8c9d4819f7ffe1bdad830df2993d1f6207bd6c8da7"
+    },
+    {
+      "bytes": 843,
+      "path": "evidence/packets/pass_config_update.json",
+      "sha256": "de8fce53ca4aace1c65f2e591eb5f0283cb05fdaf57022d7812d4ddb5c1c2f94"
+    },
+    {
+      "bytes": 787,
+      "path": "evidence/packets/pass_doc_publish.json",
+      "sha256": "8c17425060cb87a4aa90ee08ce31e7063b7406f44a63f9dd5e57aac6aa3dec78"
+    },
+    {
+      "bytes": 810,
+      "path": "evidence/packets/pass_typo_fix.json",
+      "sha256": "e4d60aab1d5b3788ff7fab85d1e6d9849d5461da6e8ee7eed2dde2cd4be46550"
+    },
+    {
+      "bytes": 4593,
+      "path": "README.md",
+      "sha256": "811adf826768e0d8c7a097433d94d786a8985c55063f4c84feb5f266d3b69939"
+    },
+    {
+      "bytes": 2239,
+      "path": "verify_prompt.md",
+      "sha256": "d4a2f62ea3cf3587f09d5d0c34b90a8bbb546535cac844fecdece025b1fd6c2c"
+    }
+  ],
+  "inputs": [
+    "evidence/packets/fail_external_edge.json",
+    "evidence/packets/fail_private_scope_mismatch.json",
+    "evidence/packets/hold_escalation_review.json",
+    "evidence/packets/hold_evidence_missing.json",
+    "evidence/packets/hold_input_signature_missing.json",
+    "evidence/packets/pass_config_update.json",
+    "evidence/packets/pass_doc_publish.json",
+    "evidence/packets/pass_typo_fix.json"
+  ],
+  "kit_id": "mil-dp-byov-kit-v0-1",
+  "protocol": "ECHO-VERIFY-compatible",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "spec_refs": {
+    "packet_schema": "schemas/mil_decision_packet_v0_1.schema.json",
+    "result_schema": "schemas/mil_dp_verification_result_v0_1.schema.json",
+    "spec": "docs/spec/mil_decision_packet_profile_v0_1.md"
+  },
+  "spec_target": "MIL-DP-0.1"
+}

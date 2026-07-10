@@ -1,0 +1,22 @@
+{
+  "schema": "docs (informative); operative contract is tools/anchor/verify_anchor.py",
+  "target_file": "echo_verify_kit/mil_dp/run_manifest.json",
+  "target_sha256": "6d96d6cc2da589c8d7e23dbf1e94cbe0f2dd49ba6a37601506436bdb002d1758",
+  "anchored_at": "2026-07-07T11:42:13Z",
+  "records": [
+    {
+      "type": "sigstore_rekor",
+      "log_index": null,
+      "bundle_path": "transparency/rekor_bundle.json",
+      "verify_command": "cosign verify-blob --bundle transparency/rekor_bundle.json --certificate-identity-regexp .+ --certificate-oidc-issuer-regexp .+ echo_verify_kit/mil_dp/run_manifest.json"
+    },
+    {
+      "type": "rfc3161",
+      "tsa": "freetsa.org",
+      "token_path": "transparency/rfc3161_token.tsr",
+      "cert_path": "transparency/rfc3161_tsa_cert.pem",
+      "verify_command": "openssl ts -verify -in transparency/rfc3161_token.tsr -data echo_verify_kit/mil_dp/run_manifest.json -CAfile transparency/rfc3161_tsa_cert.pem"
+    }
+  ],
+  "claim_boundary": "This record is an external attestation that the target file existed at the recorded time and has not since been altered. It does NOT assert validity of the decision content, third-party verification, or certification."
+}

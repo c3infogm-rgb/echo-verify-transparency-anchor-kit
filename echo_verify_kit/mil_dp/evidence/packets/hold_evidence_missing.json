@@ -1,0 +1,26 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-hold_evidence_missing",
+  "decision": "HOLD",
+  "decision_id": "dec-hold_evidence_missing",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": false,
+    "public": false
+  },
+  "evidence_refs": [],
+  "input_hash": "sha256:78f2465e6280ed52d7a4f3c4b28fb7753f1386cf124f5ca20fd0e5c4e14d0f8f",
+  "packet_hash": "sha256:d1d2e4f40f2dab804726f3269e8336ea52a054048565f5edaab4a9b1ff0b5f24",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_EVIDENCE_MISSING"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "held",
+  "state_before": "evaluating"
+}

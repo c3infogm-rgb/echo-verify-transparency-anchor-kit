@@ -1,0 +1,26 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-pass_doc_publish",
+  "decision": "PASS",
+  "decision_id": "dec-pass_doc_publish",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": false,
+    "public": false
+  },
+  "evidence_refs": [],
+  "input_hash": "sha256:1687c41e8193b932d3776af6d805fa0f08877d691311fe0a15a862911a7612dd",
+  "packet_hash": "sha256:5103089c17d5a6ef31dd1d9ca94775627e37e76697886edc9107b406e256d800",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_OK"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "released",
+  "state_before": "evaluating"
+}

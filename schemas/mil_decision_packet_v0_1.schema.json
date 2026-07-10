@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.logos-gate-core.local/mil_decision_packet_v0_1.schema.json",
+  "title": "MIL Decision Packet Profile v0.1",
+  "description": "Evaluation-stage exchange profile (MIL-DP-0.1) for representing Logos Gate Core decisions as verifiable packets. Not a certification, not a production standard, not a cryptographic primitive. Signature is not yet a trust anchor in v0.1 (ECHO-VERIFY-compatible, not complete).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "producer",
+    "decision_id",
+    "input_hash",
+    "rule_hash",
+    "decision",
+    "state_before",
+    "state_after",
+    "reason_codes",
+    "evidence_refs",
+    "audit_ref",
+    "disclosure",
+    "signature"
+  ],
+  "properties": {
+    "profile": {
+      "type": "string",
+      "const": "MIL-DP-0.1"
+    },
+    "producer": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Per-execution identifier. Excluded from packet_hash core."
+    },
+    "input_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Hash of the gate input (request). Reused from the gate's stable_hash; prefixed sha256:."
+    },
+    "rule_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Hash of the effective policy/rules. Reused from the gate's policy_hash; prefixed sha256:."
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["PASS", "HOLD", "FAIL", "FREEZE", "UNDEFINED"],
+      "description": "MIL canonical minimal verdict subset. Native ESCALATE maps to HOLD (with RC_ESCALATION_REQUIRED); the gate does not currently emit FREEZE or UNDEFINED."
+    },
+    "state_before": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state_after": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reason_codes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "MIL reason codes. Stored ascending-sorted and de-duplicated. See profile spec section 5 for the v0.1 dictionary."
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "description": "Evidence references. May be empty. Stored ascending-sorted and de-duplicated."
+    },
+    "audit_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Pointer to the durable audit record (e.g. worm://...). Excluded from packet_hash core."
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public", "private_redacted", "explain_due_at"],
+      "properties": {
+        "public": { "type": "boolean" },
+        "private_redacted": { "type": "boolean" },
+        "explain_due_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      },
+      "description": "Disclosure metadata. Excluded from packet_hash core."
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["present", "alg", "kid"],
+      "properties": {
+        "present": { "type": "boolean" },
+        "alg": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "kid": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        }
+      },
+      "description": "Packet-output signature block. Excluded from packet_hash core. NOT a trust anchor in v0.1; default {present:false, alg:null, kid:null}. Distinct from input-side signature (see profile spec D-3)."
+    },
+    "packet_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "description": "Optional. sha256 over the canonical deterministic core. When present, must equal the recomputed core hash."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "decision": { "const": "PASS" } },
+        "required": ["decision"]
+      },
+      "then": {},
+      "else": {
+        "properties": {
+          "reason_codes": { "minItems": 1 }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "audit": {
+    "decision_hash": "2e6141cf048bf0f8e0309603a200a210a4e42f644193030bcdabfc68ce437852",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "a1af18328d905f9c9b5de51b825cdfb006977f16caeabe6ab8f5765dfa61da84",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-pass_config_update",
+  "evidence_refs": [
+    "manifest-config-1",
+    "approval-eng-1"
+  ],
+  "input_signature": {
+    "present": true
+  },
+  "reason_codes": [
+    "PASS_EVIDENCE_SUFFICIENT"
+  ],
+  "state_after": "released",
+  "state_before": "evaluating",
+  "verdict": "PASS"
+}

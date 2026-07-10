@@ -1,0 +1,28 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-hold_input_signature_missing",
+  "decision": "HOLD",
+  "decision_id": "dec-hold_input_signature_missing",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": false,
+    "public": false
+  },
+  "evidence_refs": [
+    "manifest-req-1"
+  ],
+  "input_hash": "sha256:ef1c561e6eab95e8bdc777d45b58ff23f99f049ff504ac666188af383624b7b8",
+  "packet_hash": "sha256:d7ded33cab2b7e221e18a65435b8e10964a162dd24a76d4f117cfe4c6a219c4f",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_SIGNATURE_MISSING"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "held",
+  "state_before": "evaluating"
+}

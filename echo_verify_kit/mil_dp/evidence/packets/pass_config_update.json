@@ -1,0 +1,29 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-pass_config_update",
+  "decision": "PASS",
+  "decision_id": "dec-pass_config_update",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": false,
+    "public": false
+  },
+  "evidence_refs": [
+    "approval-eng-1",
+    "manifest-config-1"
+  ],
+  "input_hash": "sha256:a1af18328d905f9c9b5de51b825cdfb006977f16caeabe6ab8f5765dfa61da84",
+  "packet_hash": "sha256:8479310b43ff30b1007556373f08b54084b00aa11bd0e1bdee9b8bde18dadd1c",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_OK"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "released",
+  "state_before": "evaluating"
+}

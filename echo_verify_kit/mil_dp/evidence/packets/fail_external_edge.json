@@ -1,0 +1,28 @@
+{
+  "audit_ref": "worm://logos-gate-core/dec-fail_external_edge",
+  "decision": "FAIL",
+  "decision_id": "dec-fail_external_edge",
+  "disclosure": {
+    "explain_due_at": null,
+    "private_redacted": false,
+    "public": false
+  },
+  "evidence_refs": [
+    "manifest-edge-1"
+  ],
+  "input_hash": "sha256:841c1a122f74030757e0e5577e2bfde7e6d4d26079bb2a6eb305fccb38ed63be",
+  "packet_hash": "sha256:7893b5897aaa8c6d353f634ea8d459cd10ec5e457fc0e4c635a8bd66359e69c8",
+  "producer": "logos-gate-core",
+  "profile": "MIL-DP-0.1",
+  "reason_codes": [
+    "RC_POLICY_BOUNDARY"
+  ],
+  "rule_hash": "sha256:ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+  "signature": {
+    "alg": null,
+    "kid": null,
+    "present": false
+  },
+  "state_after": "blocked",
+  "state_before": "evaluating"
+}

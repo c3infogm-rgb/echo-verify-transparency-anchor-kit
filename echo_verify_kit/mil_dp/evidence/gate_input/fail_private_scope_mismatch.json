@@ -1,0 +1,20 @@
+{
+  "audit": {
+    "decision_hash": "cbdcc30db6f02aa7d6300c348f03dfec6e759ca79825b8f329a93b516c0fbaaa",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "5c8fecefe4c1f8215f7920260e45f03460b7c64374ba3cea0d83454bd818ae20",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-fail_private_scope_mismatch",
+  "evidence_refs": [
+    "manifest-scope-1"
+  ],
+  "rail": "private",
+  "reason_codes": [
+    "EAG_SCOPE_MISMATCH"
+  ],
+  "state_after": "blocked",
+  "state_before": "evaluating",
+  "verdict": "FAIL"
+}

@@ -1,0 +1,20 @@
+{
+  "audit": {
+    "decision_hash": "2fb0d39da648578e91cb64428b4d93ce0682751b6fc75032efd4486b193ddf51",
+    "policy_hash": "ea5afcf76d1e7ee7283e381b744a333bb86615d21ece8795fb0e00f8261e0a36",
+    "policy_profile": "standard",
+    "request_hash": "1687c41e8193b932d3776af6d805fa0f08877d691311fe0a15a862911a7612dd",
+    "timestamp": "2026-06-01T00:00:00Z"
+  },
+  "decision_id": "dec-pass_doc_publish",
+  "evidence_refs": [],
+  "input_signature": {
+    "present": true
+  },
+  "reason_codes": [
+    "PASS_EVIDENCE_SUFFICIENT"
+  ],
+  "state_after": "released",
+  "state_before": "evaluating",
+  "verdict": "PASS"
+}
